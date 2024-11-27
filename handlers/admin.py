@@ -1,6 +1,5 @@
 import os
-from aiogram.types import Message, FSInputFile, CallbackQuery, Document
-from aiogram.filters.command import CommandStart
+from aiogram.types import Message, CallbackQuery
 from aiogram.fsm.context import FSMContext
 from aiogram import F
 from signature import BotSettings
@@ -25,12 +24,14 @@ class Admin:
         self.dp.message(FSMAddBalanceAdm.uid)(self.add_balance_user_id)
         self.dp.message(FSMAddBalanceAdm.balance)(self.add_balance_amount)
         
-    async def adm(self, m: Message):
+    async def adm(self, m: Message, state: FSMContext):
+        await state.clear()
         await m.answer("Admin panel", reply_markup=await kb.adminpanel())
         
     async def set_acc(self, call: CallbackQuery, state: FSMContext):
         user_language = await self.db.get_user_language(call.from_user.id) or 'en'
         translation = languages.get(user_language, languages["en"])
+        await state.clear()
         
         await call.message.answer(translation["typeacc_adm"], reply_markup=await kb.addacctype())
         await state.set_state(FSMAddAcc.typeacc)
@@ -88,6 +89,7 @@ class Admin:
 
     async def add_balance_start(self, call: CallbackQuery, state: FSMContext):
         await call.message.answer("Enter user id")
+        await state.clear()
         await state.set_state(FSMAddBalanceAdm.uid)
         
     async def add_balance_user_id(self, m: Message, state: FSMContext):

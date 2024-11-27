@@ -73,7 +73,8 @@ class Client:
         translation = languages.get(user_language, languages["ch"])
         await m.answer(translation["main_menu"], reply_markup=await kb.main_menu(language_code=user_language))
 
-    async def profile(self, m: Message):
+    async def profile(self, m: Message, state: FSMContext):
+        await state.clear()
         balance = await self.db.get_balance_user(m.from_user.id)
         user_language = await self.db.get_user_language(m.from_user.id) or 'en'
         translation = languages.get(user_language, languages["ch"])
@@ -93,6 +94,7 @@ class Client:
 
     async def change_language_start(self, m: Message, state: FSMContext):
         user_language = await self.db.get_user_language(m.from_user.id) or 'en'
+        await state.clear()
         translation = languages.get(user_language, languages["ch"])
         await m.answer(translation["change_language"], reply_markup=await kb.change_language(user_language))
         await state.set_state(FSMChangeLanguage.language)
@@ -118,6 +120,7 @@ class Client:
     async def buy_acc(self, m: Message, state: FSMContext):
         user_language = await self.db.get_user_language(m.from_user.id) or 'en'
         translation = languages.get(user_language, languages["en"])
+        await state.clear()
 
         if await self.db.get_balance_user(m.from_user.id) >= 1:
             paths = ['accounts/session', 'accounts/tdata']
@@ -357,6 +360,7 @@ class Client:
 
     async def select_sum(self, m: Message, state: FSMContext):
         user_language = await self.db.get_user_language(m.from_user.id) or 'en'
+        await state.clear()
         translation = languages.get(user_language, languages["ch"])
         
         await m.answer(translation["select_sum"], reply_markup=await kb.generate_sum_keyboard(language_code=user_language))
