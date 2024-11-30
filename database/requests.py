@@ -136,7 +136,6 @@ class AccountReq:
                     new_user = Accounts(name=account_name, price=price)
                     session.add(new_user)
                     await session.commit()
-                    print("adadadasdasdasdasd")
                     return True
                 except IntegrityError:
                     await session.rollback()

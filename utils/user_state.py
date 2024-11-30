@@ -16,7 +16,7 @@ class FSMAddBalanceAdm(StatesGroup):
     balance = State()
     
 class FSMAddAcc(StatesGroup):
-    typeacc = State()
-    amount = State()
+    price_option = State()
+    price = State()
     document = State()
     
