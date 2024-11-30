@@ -31,7 +31,7 @@ class Accounts(Base):
 
     id = Column(Integer, primary_key=True)
     name = Column(String, unique=True)
-    price = Column(Integer, default=10)
+    price = Column(Float, default=10)
     
 
 class Transaction(Base):

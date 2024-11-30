@@ -283,7 +283,7 @@ class Client:
             (
                 f"🔢 {translation['account_number']}: {info[0]}\n"
                 f"{translation['region']}: {info[1]}\n"
-                f"{translation['price']}: {info[2]}$\n"
+                f"{translation['price']}: {float(info[2])}$\n"
                 f"📤 {translation['issue_type']}: {info[3]}"
             )
             for info in file_info_list
