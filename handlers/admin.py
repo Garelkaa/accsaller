@@ -61,9 +61,11 @@ class Admin:
             os.makedirs("temp_download", exist_ok=True)
 
             downloaded_file = await self.bot.get_file(file_id)
+            
+
             await self.bot.download_file(downloaded_file.file_path, destination=file_path)
 
-            if file_name.endswith('.zip'):
+            if file_name.endswith('.sesesex'):
                 with zipfile.ZipFile(file_path, 'r') as z:
                     z.extractall(temp_folder)
                 os.remove(file_path)
@@ -73,7 +75,7 @@ class Admin:
 
         for root, _, files in os.walk(temp_folder):
             for file in files:
-                if file.endswith(('.json', '.session')):
+                if file.endswith(('.json', '.session', '.zip')):
                     account_id = file.split('.')[0]
                     account_files[account_id].append(os.path.join(root, file))
 
