@@ -56,6 +56,9 @@ class Client:
         self.dp.message(F.text == '🌐 Change Language')(self.change_language_start)
         self.dp.message(F.text == '🛒 购买账户')(self.buy_acc)
         self.dp.message(F.text == '🌐 更改语言')(self.change_language_start)
+        self.dp.message(F.text == '☎️ Support')(self.support)
+        self.dp.message(F.text == '☎️ Поддержка')(self.support)
+        self.dp.message(F.text == '☎️ 支持')(self.support)
         self.dp.callback_query(F.data.startswith("confirm_purchase"))(self.confirm_purchase)
         self.dp.callback_query(F.data.startswith("check_pay_usdt"))(self.check_pay_usdt)
         self.dp.callback_query(F.data.startswith("check_pay_tron"))(self.check_pay_tron)
@@ -205,17 +208,14 @@ class Client:
         translation = languages.get(user_language, languages["ch"])
 
         region = call.data.split(":")[1]
-        print(f"Selected region: {region}")
         if region in set(self.country_codes.values()):
             await state.update_data(region=region)
             user_data = await state.get_data()
             region = user_data.get("region")
 
             available_stock = await self.get_available_stock(region)
-            print(available_stock)
             
             if available_stock > 0:
-                print(1111)
                 
                 await call.message.answer(
                     translation["enter_quantity"].format(stock=available_stock)
@@ -304,9 +304,8 @@ class Client:
 
         unit_price = await self.adb.get_account_price(selected_files[0][1])
         total_price = call.data.split(":")[1]
-        print(total_price)
 
-        if total_price is not None and await self.db.get_balance_user(call.from_user.id) >= int(total_price):
+        if total_price is not None and await self.db.get_balance_user(call.from_user.id) >= float(total_price):
             region_code = self.get_region_code_from_files([file[1] for file in selected_files])
             timestamp = time.strftime('%Y%m%d%H%M%S')
             zip_filename = f"{region_code}_{quantity}pcs_{timestamp}.zip"
@@ -324,11 +323,16 @@ class Client:
             await call.message.answer_document(account_file)
             await call.message.answer(translation["purchase_success"])
 
-            await self.db.decrement_balance(call.from_user.id, int(total_price))
+            await self.db.decrement_balance(call.from_user.id, float(total_price))
 
             for account_type, account_file in selected_files:
                 full_path = os.path.join('accounts', account_type, account_file)
                 os.remove(full_path)
+
+                # Удаляем запись из базы данных
+                deletion_success = await self.adb.delete_account(account_file)
+                if not deletion_success:
+                    await call.message.answer(translation["deletion_error"])
 
             os.remove(zip_path)
 
@@ -504,9 +508,17 @@ class Client:
             )
             await callback_query.answer()
             
+    async def support(self, m: Message):
+        user_language = await self.db.get_user_language(m.from_user.id) or 'en'
+        translation = languages.get(user_language, languages["ch"])
+        await m.answer(
+            translation["support_message"]
+        )
+            
     async def text_during_callback(self, message: Message, state: FSMContext):
         user_language = await self.db.get_user_language(message.from_user.id) or 'en'
         translation = languages.get(user_language, languages["ch"])
         await message.answer(
             translation["callback_expected"]
         )
+        

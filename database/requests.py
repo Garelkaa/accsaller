@@ -1,4 +1,5 @@
 from asyncio import Lock
+import asyncio
 import datetime
 from database.models import Accounts, Transaction, User
 from sqlalchemy import select
@@ -157,7 +158,8 @@ class AccountReq:
         return None
 
     async def delete_account(self, account_name: str) -> bool:
-        async with self.lock:
+        lock = asyncio.Lock() 
+        async with lock:
             async with self.db_session_maker() as session:
                 try:
                     account = await self.get_account_by_name(account_name)
@@ -169,4 +171,5 @@ class AccountReq:
                 except IntegrityError:
                     await session.rollback()
                     return False
+
                 

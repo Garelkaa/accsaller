@@ -236,6 +236,14 @@ Here, you can easily purchase accounts in various formats: <b>Session + JSON</b>
         "language_change_error": "⚠️ <i>Error saving language.</i>",
         "language_not_available": "❌ <i>This language is unavailable.</i>",
         "error_oplata_vid": "❌ <b>Unfortunately this payment option is not available yet.</b>\n\n <i>Please select another option from the list.</i>",
+        "support_message": """
+        🔧✨ Need help? We've got you covered!
+
+📩 Contact us now: @YourSupportUsername
+📌 We’re here to solve your concerns anytime!
+
+💌 Let's make it easy together!
+        """,
         
         "buy_account": "🛒 Buy Account",
         "instructions": "📘 Instructions",
@@ -310,6 +318,15 @@ Here, you can easily purchase accounts in various formats: <b>Session + JSON</b>
         "but_acc_balance_low": "Ваш баланс слишком низкий.",
         "region": "Регион",
         
+        "support_message": """
+        🔧✨ Нужна помощь? Мы здесь, чтобы помочь!
+            
+📩 Свяжитесь с нами прямо сейчас: @YourSupportUsername
+📌 Мы всегда на связи, чтобы решить ваши вопросы!
+
+💌 Давайте сделаем всё проще вместе!
+        """,
+        
         "quantity_exceeds_stock": "Запрашиваемое количество превышает доступный запас.",
         "invalid_quantity": "Недопустимое количество. Пожалуйста, введите положительное число.",
         "confirm_purchase": "Вы подтверждаете покупку",
@@ -356,67 +373,6 @@ Here, you can easily purchase accounts in various formats: <b>Session + JSON</b>
         "filedownload_success": "✅ <i>Файл успешно загружен!</i>",
         "not_found": "🔍 <i>Такой тип аккаунта не найден.</i>",
     },
-#     "ch": {
-#         "main_menu": """👋 <b>你好！</b>
-# 🎉 <b>欢迎来到我们的 Telegram 账号服务！</b>
-# 在这里，你可以轻松购买账号格式：<b>Session + JSON</b> 或 <b>TDATA</b>。 📱
-
-# 💡 <i>你想做什么？</i> 👇""",
-        
-#         "change_language": "🌐 <b>选择你的语言...</b>",
-        
-#         "but_acc_balance_low": "⚠️ <i>请先充值余额。</i>",
-#         "but_acc_select_country": "🌍 <b>选择你想要的国家...</b>",
-#         "select_type_acc": "🔄 <b>选择账号传输类型。</b>",
-#         "region_not_available": "🚫 <i>该地区不可用。</i>",
-#         "account_not_found": "❌ <i>未找到所选地区和类型的账号。</i>",
-#         "account_number": "🔢 <b>账号编号</b>",
-#         "region": "🌎 <b>地区</b>",
-#         "price": "💲 <b>价格</b>",
-#         "credits": "🔹 <b>积分</b>",
-#         "issue_type": "📤 <b>传输类型</b>",
-#         "callback_expected": "当前需要从内联键盘响应。请完成或取消此操作后再开始新操作。",
-#         "profile": "👤 个人资料",
-        
-#         "profile_info": "👤 <b>个人资料</b>\n\n"
-#                 "💳 <b>余额：</b> {balance} USD\n"
-#                 "🌍 <b>语言：</b> {user_language}\n"
-#                 "💬 <b>交易记录：</b>\n{transaction}",
-
-        
-#         "purchase_success": "🎉 <b>购买成功！</b>",
-#         "insufficient_funds": "🚫 <i>余额不足，无法购买。</i>",
-#         "purchase_canceled": "❌ <b>已取消购买。</b>",
-#         "language_changed": "🌍 <b>语言已更改！</b>",
-#         "language_change_error": "⚠️ <i>保存语言时出错。</i>",
-#         "language_not_available": "❌ <i>该语言不可用。</i>",
-#         "error_oplata_vid": "❌ <b>不幸的是,此付款选项不可用。</b>\n\n<i>请从列表中选择另一个选项。</i>",
-        
-#         "buy_account": "🛒 购买账户<",
-#         "instructions": "📘 说明<",
-#         "top_up_balance": "💵 充值余额<",
-#         "change_language": "🌐 更改语言",
-#         "support": "☎️ 支持<",
-#         "confirm_purchase": "✅ 确认购买<",
-#         "cancel": "❌ 取消<",
-#         "no_acc": "📭 店内无账户。",
-#         "check_pay": "💰 检查支付<",
-#         "no_transactions": "您目前没有任何交易。",
-        
-#         "select_sum": "💵 <b>输入以美元为单位的金额以充值余额。</b>",
-#         "pls_send_money_tron": "💸 <b>请将</b> {trx} <b>({dollar}$) 转至 TRX 帐户:</b> <code>TTHhZ9wY6wzikAH2QxknUX51JMpmcxdL</code>。",
-#         "pls_send_money_usdt": "💸 <b>请将</b> {usdt} <b>({dollar}$) 转至 USDT 帐户:</b> <code>TKQ4eT1xfJCPt6eV9hBx4b2iEhzwWT18er</code>。",
-#         "pls_send_money_bsc": "💸 <b>请将</b> {bsc} <b>({dollar}$) 转至 BSC 帐户:</b> <code>TTHhZ9wY6wzikAH2QxknUX51JMpmcxdL</code>。",
-#         "pls_correct_sum": "❌ <i>输入的金额不正确。</i>",
-#         "balance_updated": "💰 <b>余额已成功充值！</b>\n💵 <i>您的余额：</i>{balance}",
-        
-#         "typeacc_adm": "📋 <b>选择账号类型</b>",
-#         "amountacc_adm": "💲 <i>输入账号价格。</i>",
-#         "documentacc_adm": "📎 <i>上传账号文件（.zip 格式）。</i>",
-#         "filedownload_success": "✅ <i>文件下载成功！</i>",
-#         "not_found": "🔍 <i>未找到此类型账号。</i>",
-#         "select_valuta": "选择货币",
-#     },
     "ch": {
         "main_menu": """👋 <b>你好！</b>
 🎉 <b>欢迎来到我们的 Telegram 账号服务！</b>
@@ -492,5 +448,14 @@ Here, you can easily purchase accounts in various formats: <b>Session + JSON</b>
         "filedownload_success": "✅ <i>文件下载成功！</i>",
         "not_found": "🔍 <i>未找到此类型账号。</i>",
         "select_valuta": "选择货币",
+        
+        "support_message": """
+        🔧✨ 需要帮助吗？我们随时为您服务！
+
+📩 联系我们: @YourSupportUsername
+📌 随时为您解答问题！
+
+💌 让我们一起解决问题！
+        """,
     }
 }

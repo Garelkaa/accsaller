@@ -126,13 +126,19 @@ class Admin:
         account_files = data["account_files"]
         price_option = data["price_option"]
 
-        if price_option == "single":
+        def parse_price(value):
             try:
-                price = int(m.text.strip())
+                price = float(value.strip())
                 if price <= 0:
                     raise ValueError
+                return price
             except ValueError:
-                await m.answer("Price must be a positive number. Try again.")
+                return None
+
+        if price_option == "single":
+            price = parse_price(m.text)
+            if price is None:
+                await m.answer("Price must be a positive number (integer or float). Try again.")
                 return
 
             prices = {account_id: price for account_id in account_files.keys()}
@@ -140,7 +146,9 @@ class Admin:
 
         elif price_option == "bulk":
             try:
-                prices_input = [int(price.strip()) for price in m.text.split(",")]
+                prices_input = [parse_price(price) for price in m.text.split(",")]
+                if None in prices_input:
+                    raise ValueError
                 if len(prices_input) != len(account_files):
                     await m.answer(
                         f"The number of prices ({len(prices_input)}) doesn't match the number of accounts ({len(account_files)}). Try again."
@@ -149,7 +157,7 @@ class Admin:
                 prices = dict(zip(account_files.keys(), prices_input))
                 await self.process_accounts(m, state, account_files, prices)
             except ValueError:
-                await m.answer("Prices must be numbers separated by commas. Try again.")
+                await m.answer("Prices must be positive numbers (integer or float) separated by commas. Try again.")
                 return
 
         elif price_option == "sequential":
@@ -157,12 +165,9 @@ class Admin:
             current_index = data["current_account_index"]
             accounts = list(account_files.keys())
 
-            try:
-                price = int(m.text.strip())
-                if price <= 0:
-                    raise ValueError
-            except ValueError:
-                await m.answer("Price must be a positive number. Try again.")
+            price = parse_price(m.text)
+            if price is None:
+                await m.answer("Price must be a positive number (integer or float). Try again.")
                 return
 
             prices[accounts[current_index]] = price
