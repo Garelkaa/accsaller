@@ -61,8 +61,6 @@ class Admin:
             os.makedirs("temp_download", exist_ok=True)
 
             downloaded_file = await self.bot.get_file(file_id)
-            
-
             await self.bot.download_file(downloaded_file.file_path, destination=file_path)
 
             if file_name.endswith('.sesesex'):
@@ -91,6 +89,7 @@ class Admin:
         else:
             await state.update_data(account_files=dict(account_files))
 
+        # Проверяем флаг message_sent перед отправкой сообщения
         if not existing_data.get("message_sent"):
             account_files = await state.get_data()
             account_count = len(account_files["account_files"])
@@ -101,6 +100,7 @@ class Admin:
                 "2. Prices for each account, separated by commas.\n"
                 "3. Enter prices one by one for each account."
             )
+            # Обновляем состояние, чтобы больше не отправлять сообщение
             await state.update_data(message_sent=True)
             await state.set_state(FSMAddAcc.price_option)
 

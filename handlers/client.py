@@ -508,9 +508,10 @@ class Client:
             )
             await callback_query.answer()
             
-    async def support(self, m: Message):
+    async def support(self, m: Message, state: FSMContext):
         user_language = await self.db.get_user_language(m.from_user.id) or 'en'
         translation = languages.get(user_language, languages["ch"])
+        await state.clear()
         await m.answer(
             translation["support_message"]
         )
