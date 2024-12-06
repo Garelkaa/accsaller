@@ -95,7 +95,7 @@ class Admin:
             account_count = len(account_files["account_files"])
             accounts_list = "\n".join([f"- {account_id}" for account_id in account_files["account_files"].keys()])
             await m.answer(
-                f"Found {account_count} accounts:\n{accounts_list}\n\nChoose a pricing method:\n"
+                f""
                 "1. Single price for all accounts.\n"
                 "2. Prices for each account, separated by commas.\n"
                 "3. Enter prices one by one for each account."

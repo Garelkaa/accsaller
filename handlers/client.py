@@ -1,3 +1,4 @@
+import asyncio
 from datetime import datetime, timezone
 import os
 import random
@@ -382,41 +383,52 @@ class Client:
         data = call.data
         try:
             balance = data.split(":")[1]
-            new_balance = round(float(balance), 2)  
+            new_balance = round(float(balance), 2)
 
-            tolerance = random.uniform(0.0001, 0.1000)  
-            usdt_with_tolerance = round(new_balance + tolerance, 4)  
+            tolerance = random.uniform(0.0001, 0.1000)
+            usdt_with_tolerance = round(new_balance + tolerance, 4)
+            
             await call.message.answer(
-                translation["pls_send_money_usdt"].format(usdt=usdt_with_tolerance, dollar=new_balance),
-                reply_markup=await kb.confirmpaymentusdt(usdt=usdt_with_tolerance, new_balance=new_balance, language_code=user_language)
+                translation["pls_send_money_usdt"].format(usdt=usdt_with_tolerance, dollar=new_balance)
             )
+
+            asyncio.create_task(self.check_payment_timer(call.from_user.id, usdt_with_tolerance, new_balance, state))
+
         except ValueError:
-            await call.message.answer(translation["pls_correct_sum_usdt"])  
+            await call.message.answer(translation["pls_correct_sum_usdt"])
             await state.clear()
 
-    async def check_pay_usdt(self, call: CallbackQuery, state: FSMContext):
-        user_language = await self.db.get_user_language(call.from_user.id) or 'en'
+
+    async def check_payment_timer(self, user_id: int, usdt: float, new_balance: float, state: FSMContext):
+        user_language = await self.db.get_user_language(user_id) or 'en'
         translation = languages.get(user_language, languages["ch"])
-        data = call.data
-        usdt = data.split(":")[1].split("%")[0]
-        new_balance = float(data.split(":")[1].split("%")[1])
 
-        success = main(usdt)
+        for _ in range(10):
+            success = main(usdt)
+            if success:
+                await self.db.add_balance(user_id, new_balance)
+                balance = await self.db.get_balance_user(user_id)
+                await self.db.add_transaction(
+                    user_id=user_id,
+                    value=new_balance,
+                    valuta='USDT',
+                    date=datetime.now(timezone.utc),
+                )
+                await self.bot.send_message(
+                    chat_id=user_id,
+                    text=translation["balance_updated"].format(balance=balance)
+                )
+                await state.clear()
+                return
+            await asyncio.sleep(60)
 
-        if success:
-            await self.db.add_balance(call.from_user.id, new_balance)
-            balance = await self.db.get_balance_user(call.from_user.id)
-            await self.db.add_transaction(
-                user_id=call.from_user.id,
-                value=new_balance,
-                valuta='USDT',
-                date=datetime.now(timezone.utc),
-            )
-            await call.message.answer(
-                translation["balance_updated"].format(balance=balance)
-            )
-            await state.clear()
-
+        await self.bot.send_message(
+            chat_id=user_id,
+            text=translation["payment_timeout"]
+        )
+        await state.clear()
+        
+        
     async def process_add_balance_bsc(self, call: CallbackQuery, state: FSMContext):
         user_language = await self.db.get_user_language(call.from_user.id) or 'en'
         translation = languages.get(user_language, languages["ch"])

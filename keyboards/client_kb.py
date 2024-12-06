@@ -1,5 +1,5 @@
 from aiogram.utils.keyboard import ReplyKeyboardBuilder, InlineKeyboardBuilder
-from aiogram.types import KeyboardButton, InlineKeyboardButton, InlineKeyboardMarkup
+from aiogram.types import KeyboardButton
 from utils.language import languages
 
 class ReplyKb:
@@ -155,7 +155,7 @@ class ReplyKb:
     
     @staticmethod
     async def generate_sum_keyboard(language_code: str):
-        sums = [5, 10, 20, 50, 100, 300, 500, 1000]
+        sums = [5, 10, 20, 50, 100, 300, 500, 1000, 2000, 3000, 5000]
         menu = InlineKeyboardBuilder()
 
         for amount in sums:

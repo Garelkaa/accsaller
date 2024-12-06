@@ -437,7 +437,7 @@ Here, you can easily purchase accounts in various formats: <b>Session + JSON</b>
         
         "select_sum": "💵 <b>输入以美元为单位的金额以充值余额。</b>",
         "pls_send_money_tron": "💸 <b>请将</b> {trx} <b>({dollar}$) 转至 TRX 帐户:</b> <code>TTHhZ9wY6wzikAH2QxknUX51JMpmcxdL</code>。",
-        "pls_send_money_usdt": "💸 <b>请将</b> {usdt} <b>({dollar}$) 转至 USDT 帐户:</b> <code>TTHhZ9wY6wzikAH2QxodknUX51JMpmcxdL</code>。",
+        "pls_send_money_usdt": "💸 <b>请将</b> {usdt} <b>({dollar}$) 转至 USDT 帐户:</b> <code>TKQ4eT1xfJCPt6eV9hBx4b2iEhzwWT18er</code>。",
         "pls_send_money_bsc": "💸 <b>请将</b> {bsc} <b>({dollar}$) 转至 BSC 帐户:</b> <code>TTHhZ9wY6wzikAH2QxknUX51JMpmcxdL</code>。",
         "pls_correct_sum": "❌ <i>输入的金额不正确。</i>",
         "balance_updated": "💰 <b>余额已成功充值！</b>\n💵 <i>您的余额：</i>{balance}",
