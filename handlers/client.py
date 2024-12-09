@@ -61,7 +61,7 @@ class Client:
         self.dp.message(F.text == '☎️ Поддержка')(self.support)
         self.dp.message(F.text == '☎️ 支持')(self.support)
         self.dp.callback_query(F.data.startswith("confirm_purchase"))(self.confirm_purchase)
-        self.dp.callback_query(F.data.startswith("check_pay_usdt"))(self.check_pay_usdt)
+        
         self.dp.callback_query(F.data.startswith("check_pay_tron"))(self.check_pay_tron)
         self.dp.callback_query(F.data.startswith("check_pay_bsc"))(self.check_pay_bsc)
         self.dp.callback_query(F.data == "cancel_purchase")(self.cancel_purchase)
@@ -146,7 +146,7 @@ class Client:
                 await m.answer(
                     translation["but_acc_select_country"],
                     reply_markup=await kb.build_region_keyboard(
-                        self.country_codes, available_regions, language_code=user_language
+                        self.country_codes, available_regions,available_stock, language_code=user_language
                     )
                 )
             else:
@@ -206,28 +206,31 @@ class Client:
 
     async def set_region(self, call: CallbackQuery, state: FSMContext):
         user_language = await self.db.get_user_language(call.from_user.id) or 'en'
-        translation = languages.get(user_language, languages["ch"])
+        translation = languages.get(user_language, languages["en"])
 
         region = call.data.split(":")[1]
+        print(call.data)
         if region in set(self.country_codes.values()):
             await state.update_data(region=region)
-            user_data = await state.get_data()
-            region = user_data.get("region")
 
             available_stock = await self.get_available_stock(region)
-            
+            user_balance = await self.db.get_balance_user(call.from_user.id)
+
             if available_stock > 0:
-                
-                await call.message.answer(
-                    translation["enter_quantity"].format(stock=available_stock)
-                )
-                await state.update_data(stock_quantity=available_stock)
-                await state.set_state(FSMSetRegion.quantity)
+                max_purchase = int(user_balance // 12000)
+                max_available = min(max_purchase, available_stock)
+
+                if max_available > 0:
+                    await call.message.answer(
+                        translation["enter_quantity"].format(stock=available_stock, max=max_available)
+                    )
+                    await state.update_data(stock_quantity=max_available)
+                    await state.set_state(FSMSetRegion.quantity)
+                else:
+                    await call.message.answer(translation["but_acc_balance_low"])
             else:
-                print(2222)
                 await call.message.answer(translation["account_not_found"])
         else:
-            print(3333)
             await call.message.answer(translation["region_not_available"])
 
     async def get_available_stock(self, region):
@@ -295,6 +298,7 @@ class Client:
             confirmation_text,
             reply_markup=await kb.confirmmorend(total_price, user_language)
         )
+
 
     async def confirm_purchase(self, call: CallbackQuery, state: FSMContext):
         user_data = await state.get_data()

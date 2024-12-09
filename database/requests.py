@@ -1,10 +1,11 @@
 from asyncio import Lock
 import asyncio
 import datetime
-from database.models import Accounts, Transaction, User
+from database.models import Accounts, CountryCode, Transaction, User
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import async_sessionmaker
-from sqlalchemy.future import select
+from sqlalchemy.orm import joinedload
+
 from sqlalchemy.exc import IntegrityError
 
 class UserReq:
@@ -130,12 +131,12 @@ class AccountReq:
         self.db_session_maker = db_session_maker
         self.lock = Lock()
         
-    async def add_acc(self, account_name: str, price: int):
+    async def add_acc(self, account_name: str, country_code_id: int):
         async with self.lock:
             async with self.db_session_maker() as session:
                 try:
-                    new_user = Accounts(name=account_name, price=price)
-                    session.add(new_user)
+                    new_account = Accounts(name=account_name, country_code_id=country_code_id)
+                    session.add(new_account)
                     await session.commit()
                     return True
                 except IntegrityError:
@@ -146,16 +147,47 @@ class AccountReq:
         async with self.lock:
             async with self.db_session_maker() as session:
                 result = await session.execute(
-                    select(Accounts).filter(Accounts.name == account_name)
+                    select(Accounts).where(Accounts.name == account_name)
                 )
-                account = result.scalar()
-                return account
+                return result.scalars().one_or_none()
 
-    async def get_account_price(self, account_name: str) -> float:
-        account = await self.get_account_by_name(account_name)
-        if account:
-            return account.price
-        return None
+    async def get_account_price(self, account_name: str):
+        async with self.lock:
+            async with self.db_session_maker() as session:
+                result = await session.execute(
+                    select(Accounts)
+                    .options(joinedload(Accounts.country_code))
+                    .where(Accounts.name == account_name)
+                )
+                account = result.scalars().one_or_none()
+                if account and account.country_code:
+                    return account.country_code.price
+                return None
+
+    
+    async def get_country_code(self, code: str):
+        async with self.db_session_maker() as session:
+            result = await session.execute(
+                select(CountryCode).filter(CountryCode.code == code)
+            )
+            return result.scalar()
+
+    async def add_country_code(self, code: str, price: float):
+        async with self.db_session_maker() as session:
+            new_code = CountryCode(code=code, price=price)
+            session.add(new_code)
+            await session.commit()
+            return new_code.id
+
+    async def update_country_code_price(self, country_code_id: int, price: float):
+        async with self.db_session_maker() as session:
+            result = await session.execute(
+                select(CountryCode).filter(CountryCode.id == country_code_id)
+            )
+            country_code = result.scalar()
+            if country_code:
+                country_code.price = price
+                await session.commit()
 
     async def delete_account(self, account_name: str) -> bool:
         lock = asyncio.Lock() 

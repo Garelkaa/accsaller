@@ -4,6 +4,8 @@ from sqlalchemy.ext.declarative import declared_attr
 from sqlalchemy import NUMERIC, Column, Float, Integer, String, Boolean, BigInteger, DateTime, ForeignKey
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine, AsyncSession
 from datetime import datetime
+from sqlalchemy.orm import relationship
+
 
 
 # Базовый класс для всех моделей
@@ -26,12 +28,20 @@ class User(Base):
     created_at = Column(DateTime(), default=datetime.now())
     
 
+class CountryCode(Base):
+    __tablename__ = 'country_codes'
+
+    id = Column(Integer, primary_key=True)
+    code = Column(String, unique=True)
+    price = Column(Float, nullable=False)
+
 class Accounts(Base):
     __tablename__ = 'accounts'
 
     id = Column(Integer, primary_key=True)
     name = Column(String, unique=True)
-    price = Column(Float, default=10)
+    country_code_id = Column(Integer, ForeignKey('country_codes.id'))
+    country_code = relationship("CountryCode")
     
 
 class Transaction(Base):

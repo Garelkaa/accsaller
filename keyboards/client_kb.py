@@ -4,7 +4,7 @@ from utils.language import languages
 
 class ReplyKb:
     @staticmethod
-    async def main_menu(language_code: str = 'en'):
+    async def main_menu(language_code: str = 'ch'):
         translation = languages.get(language_code, languages["en"])
 
         buttons = [
@@ -24,7 +24,7 @@ class ReplyKb:
         return builder.as_markup(resize_keyboard=True)
     
     @staticmethod
-    async def change_language(language_code: str = 'en'):
+    async def change_language(language_code: str = 'ch'):
         translation = languages.get(language_code, languages["en"])
         buttons = [
             ("🇺🇸", "set_lang:en"),
@@ -56,7 +56,7 @@ class ReplyKb:
         return builder.adjust(1).as_markup()
 
     @staticmethod
-    async def confirmmorend(total_price: int, language_code: str = 'en'):
+    async def confirmmorend(total_price: int, language_code: str = 'ch'):
         translation = languages.get(language_code, languages["en"])
 
         buttons = [
@@ -71,7 +71,7 @@ class ReplyKb:
         return menu.adjust(1).as_markup()
     
     @staticmethod
-    async def confirmpaymentbsc(bsc: int, new_balance: float, language_code: str = 'en'):
+    async def confirmpaymentbsc(bsc: int, new_balance: float, language_code: str = 'ch'):
         translation = languages.get(language_code, languages["en"])
 
         buttons = [
@@ -85,7 +85,7 @@ class ReplyKb:
         return menu.adjust(1).as_markup()
     
     @staticmethod
-    async def confirmpaymentusdt(usdt: int, new_balance: float, language_code: str = 'en'):
+    async def confirmpaymentusdt(usdt: int, new_balance: float, language_code: str = 'ch'):
         translation = languages.get(language_code, languages["en"])
 
         buttons = [
@@ -99,7 +99,7 @@ class ReplyKb:
         return menu.adjust(1).as_markup()
     
     @staticmethod
-    async def confirmpaymentron(trx: int, new_balance: float, language_code: str = 'en'):
+    async def confirmpaymentron(trx: int, new_balance: float, language_code: str = 'ch'):
         translation = languages.get(language_code, languages["en"])
 
         buttons = [
@@ -176,7 +176,10 @@ class ReplyKb:
     
     @staticmethod
     async def build_region_keyboard(
-        country_codes: dict, available_regions: set, current_page: int = 0, language_code: str = 'en'
+        country_codes: dict,
+        available_regions: set,
+        available_stock: dict,
+        language_code: str = 'ch',
     ):
         if not isinstance(country_codes, dict):
             raise ValueError("country_codes должен быть словарем.")
@@ -187,6 +190,10 @@ class ReplyKb:
                 "us": "United States",
                 "de": "Germany",
                 "fr": "France",
+                "cn": "China",
+                "jp": "Japan",
+                "in": "India",
+                "br": "Brazil",
                 "cancel": "Cancel",
             },
             "ru": {
@@ -194,34 +201,36 @@ class ReplyKb:
                 "us": "США",
                 "de": "Германия",
                 "fr": "Франция",
+                "cn": "Китай",
+                "jp": "Япония",
+                "in": "Индия",
+                "br": "Бразилия",
                 "cancel": "Отмена",
+            },
+            "zh": {
+                "ru": "俄罗斯",
+                "us": "美国",
+                "de": "德国",
+                "fr": "法国",
+                "cn": "中国",
+                "jp": "日本",
+                "in": "印度",
+                "br": "巴西",
+                "cancel": "取消",
             },
         }
 
         translations = region_translations.get(language_code, region_translations["en"])
 
-        filtered_regions = {
-            code: region for code, region in country_codes.items() if region in available_regions
-        }
-
-        regions_list = sorted(filtered_regions.items(), key=lambda x: x[1])
-        
-        total_pages = len(regions_list)
-        current_page = max(0, min(current_page, total_pages - 1))
-        
         builder = InlineKeyboardBuilder()
 
-        if regions_list:
-            code, region = regions_list[current_page]
-            region_name = translations.get(region, region)
-            builder.button(text=f"{region_name} ({code})", callback_data=f"select_region:{region}")
-        
-        if current_page > 0:
-            builder.button(text="⬅️ Назад", callback_data=f"region_page:{current_page - 1}")
-        if current_page < total_pages - 1:
-            builder.button(text="➡️ Вперед", callback_data=f"region_page:{current_page + 1}")
-        
+        for code, region in country_codes.items():
+            if region in available_regions:
+                stock = available_stock.get(region, 0)
+                builder.button(
+                    text=f"{translations.get(region, region)} ({code}) - {stock} pcs",
+                    callback_data=f"select_region:{region}",
+                )
+
         builder.button(text=translations["cancel"], callback_data="cancel")
-        
-        return builder.adjust(1).as_markup()
-    
+        return builder.adjust(3).as_markup()

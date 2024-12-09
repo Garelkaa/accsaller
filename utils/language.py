@@ -228,7 +228,7 @@ Here, you can easily purchase accounts in various formats: <b>Session + JSON</b>
             "ZM": "Zambia",
             "ZW": "Zimbabwe"
         },
-        
+
         "purchase_success": "🎉 <b>Purchase Successful!</b>",
         "insufficient_funds": "🚫 <i>Insufficient funds for this purchase.</i>",
         "purchase_canceled": "❌ <b>Purchase Canceled.</b>",
@@ -244,7 +244,7 @@ Here, you can easily purchase accounts in various formats: <b>Session + JSON</b>
 
 💌 Let's make it easy together!
         """,
-        
+
         "buy_account": "🛒 Buy Account",
         "instructions": "📘 Instructions",
         "top_up_balance": "💵 Top Up Balance",
@@ -312,7 +312,8 @@ Here, you can easily purchase accounts in various formats: <b>Session + JSON</b>
         "issue_type": "📤 <b>Вид выдачи</b>",
         "callback_expected": "Сейчас ожидается ответ с инлайн-клавиатуры. Пожалуйста, завершите или отмените этот процесс, прежде чем начинать новый.",
         "no_transactions": "На данный момент у вас нету транзакций.",
-        "enter_quantity": "📝 <b>Введите количество аккаунтов для покупки.</b> (Доступно: {stock})",
+        "enter_quantity": "📝 <b>Введите количество аккаунтов для покупки.</b> (Доступно: {stock}, Максимум: {max})",
+
         "but_acc_select_country": "Пожалуйста, выберите страну:",
         "no_acc": "Нет доступных аккаунтов.",
         "but_acc_balance_low": "Ваш баланс слишком низкий.",
@@ -416,6 +417,7 @@ Here, you can easily purchase accounts in various formats: <b>Session + JSON</b>
         "change_language": "🌐 更改语言",
         "support": "☎️ 支持",
         "confirm_purchase": "✅ 确认购买",
+
         "cancel": "❌ 取消",
         "no_acc": "📭 店内无账户。",
         "check_pay": "💰 检查支付",
