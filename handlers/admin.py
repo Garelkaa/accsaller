@@ -7,7 +7,7 @@ from aiogram.types import Message, CallbackQuery
 from aiogram.fsm.context import FSMContext
 from aiogram import F
 from signature import BotSettings
-from utils.user_state import FSMAddAcc
+from utils.user_state import FSMAddAcc, FSMAddBalanceAdm
 from keyboards.client_kb import ReplyKb as kb
 
 
@@ -21,10 +21,13 @@ class Admin:
     async def register_handlers(self):
         self.dp.message(F.text == '/adm')(self.adm)
         self.dp.callback_query(F.data == 'add_doc')(self.set_acc)
+        self.dp.callback_query(F.data == 'change_balance')(self.add_balance_start)
         self.dp.message(FSMAddAcc.country_code)(self.process_country_code)
         self.dp.message(FSMAddAcc.update_price)(self.update_price)
         self.dp.message(FSMAddAcc.new_price)(self.set_new_price)
         self.dp.message(FSMAddAcc.document)(self.download_doc_acc)
+        self.dp.message(FSMAddBalanceAdm.uid)(self.add_balance_user_id)
+        self.dp.message(FSMAddBalanceAdm.balance)(self.add_balance_amount)
 
     async def adm(self, m: Message, state: FSMContext):
         await state.clear()
@@ -162,5 +165,34 @@ class Admin:
 
         success_message = "\n".join([f"Account {acc_id} processed successfully." for acc_id in success_accounts])
         await m.answer(f"Processing complete:\n{success_message}\n\nAll files processed successfully.")
+        await state.clear()
+        
+    async def add_balance_start(self, call: CallbackQuery, state: FSMContext):
+        await call.message.answer("Enter the user ID.")
+        await state.clear()
+        await state.set_state(FSMAddBalanceAdm.uid)
+    async def add_balance_user_id(self, m: Message, state: FSMContext):
+        user_id = m.text
+        if not user_id.isdigit():
+            await m.answer("Invalid user ID. Please enter a number.")
+            return
+        await state.update_data(user_id=user_id)
+        await m.answer("Enter the amount.")
+        await state.set_state(FSMAddBalanceAdm.balance)
+    async def add_balance_amount(self, m: Message, state: FSMContext):
+        amount = m.text
+        if not amount.isdigit() or int(amount) <= 0:
+            await m.answer("Invalid amount. Please enter a positive number.")
+            return
+        data = await state.get_data()
+        user_id = int(data.get("user_id"))
+        amount = int(amount)
+        user = await self.db.get_user(user_id)
+        if not user:
+            await m.answer("User not found.")
+            await state.clear()
+            return
+        await self.db.add_balance(user_id, amount)
+        await m.answer("Balance added successfully.")
         await state.clear()
 

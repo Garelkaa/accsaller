@@ -33,10 +33,6 @@ class BotRunner:
 
 
 if __name__ == '__main__':
-    # Windows-specific workaround for asyncio
-    import sys
-    if sys.platform == "win32":
-        asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
     
     bot_runner = BotRunner()
     try:

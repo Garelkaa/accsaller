@@ -163,7 +163,6 @@ class AccountReq:
                 if account and account.country_code:
                     return account.country_code.price
                 return None
-
     
     async def get_country_code(self, code: str):
         async with self.db_session_maker() as session:

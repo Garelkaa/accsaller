@@ -27,6 +27,12 @@ Here, you can easily purchase accounts in various formats: <b>Session + JSON</b>
         "issue_type": "📤 <b>Type of Delivery</b>",
         "callback_expected": "A response from the inline keyboard is expected now. Please complete or cancel this action before starting a new one.",
         "no_transactions": "You have no transactions at the moment.",
+        "payment_timeout": """⏳ <b>Time’s up!</b> 
+It seems like you didn’t complete your payment within 10 minutes. 😔
+
+Don’t worry! You can always try again whenever you’re ready. 💪 
+Simply restart the process and top up your balance to get back on track. 🚀""",
+
         "countries": {
             "AF": "Afghanistan",
             "AL": "Albania",
@@ -298,6 +304,13 @@ Here, you can easily purchase accounts in various formats: <b>Session + JSON</b>
                 "💳 <b>Баланс:</b> {balance} USD\n"
                 "🌍 <b>Язык:</b> {user_language}\n"
                 "💬 <b>История транзакций:</b>\n{transaction}",
+        
+        "payment_timeout": """⏳ <b>Время вышло!</b> 
+Похоже, вы не успели пополнить баланс за 10 минут. 😔
+
+Не переживайте! Вы всегда можете попробовать снова. 💪 
+Просто начните процесс заново и пополните баланс, чтобы продолжить. 🚀""",
+
 
         
         "but_acc_balance_low": "⚠️ <i>Сначала пополните баланс.</i>",
@@ -459,5 +472,11 @@ Here, you can easily purchase accounts in various formats: <b>Session + JSON</b>
 
 💌 让我们一起解决问题！
         """,
+        "payment_timeout": """⏳ <b>时间到了！</b> 
+看起来您在 10 分钟内未完成付款。😔
+
+别担心！随时可以再次尝试。💪 
+只需重新开始流程，充值余额即可继续体验！🚀"""
+
     }
 }
